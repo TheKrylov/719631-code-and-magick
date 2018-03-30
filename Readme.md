@@ -1,7 +1,7 @@
 # Учебный проект «Код и Магия» [![Build status][travis-image]][travis-url]
 
 * Студент: [Николай Крылов](https://up.htmlacademy.ru/javascript/13/user/719631).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Альшевский](https://htmlacademy.ru/profile/id568227).
 
 ---
 

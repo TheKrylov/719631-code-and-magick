@@ -25,7 +25,7 @@ var renderBar = function (ctx, x, name, time, max) {
   ctx.fillText(name, x, 265);
 
   // Bar
-  var color = name === 'Вы' ? 'rgba(255, 0, 0, 1)' : 'rgb(0, 0, 255, .' + Math.floor(Math.random() * 10) + 1 + ')';
+  var color = name === 'Вы' ? 'rgba(255, 0, 0, 1)' : 'rgba(0, 0, 255, .' + Math.floor(Math.random() * 10) + 1 + ')';
   ctx.fillStyle = color;
   ctx.fillRect(x, 95 + BAR_HEIGHT - BAR_HEIGHT * time / max, BAR_WIDTH, BAR_HEIGHT * time / max);
 

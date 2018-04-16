@@ -10,15 +10,50 @@
     quantity: 4
   };
 
+  // Const
+  var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
+
+  var WIZZARD_VARIABLES = {
+    coatColors: mock.coatColors,
+    eyeColors: mock.eyeColors,
+    fireballColors: ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848']
+  };
+
   // Vars
   var userDialog = document.querySelector('.setup');
   var similarList = userDialog.querySelector('.setup-similar-list');
   var wizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 
-  // showPopup
-  var showPopup = function () {
+  var setupOpen = document.querySelector('.setup-open');
+  var setupClose = userDialog.querySelector('.setup-close');
+  var userNameInput = userDialog.querySelector('.setup-user-name');
+  var submit = userDialog.querySelector('.setup-submit');
+
+  var setupPlayer = document.querySelector('.setup-player');
+  var setupEyes = setupPlayer.querySelector('.wizard-eyes');
+  var setupEyesInput = setupPlayer.querySelector('input[name="eyes-color"]');
+  var setupFireballColor = setupPlayer.querySelector('.setup-fireball-wrap');
+  var setupFireballColorInput = setupPlayer.querySelector('input[name="fireball-color"]');
+
+
+  // Esc key handler
+  var onPopupEscPress = function (evt) {
+    if (document.activeElement !== userNameInput && evt.keyCode === ESC_KEYCODE) {
+      closePopup();
+    }
+  };
+
+  // Open Popup
+  var openPopup = function () {
     userDialog.classList.remove('hidden');
-    userDialog.querySelector('.setup-similar').classList.remove('hidden');
+    document.addEventListener('keydown', onPopupEscPress);
+  };
+
+  // Close Popup
+  var closePopup = function () {
+    userDialog.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscPress);
   };
 
   // Get Random
@@ -36,6 +71,10 @@
       wizard.eyesColor = getRandom(eyeColors);
       wizards[i] = wizard;
     }
+
+    // Show wizzards
+    userDialog.querySelector('.setup-similar').classList.remove('hidden');
+
     return wizards;
   };
 
@@ -60,8 +99,54 @@
     similarList.appendChild(fragment);
   };
 
+  // Events handlers
+
+  setupOpen.addEventListener('click', function () {
+    openPopup();
+  });
+
+  setupOpen.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      openPopup();
+    }
+  });
+
+  setupClose.addEventListener('click', function () {
+    if (document.activeElement !== userNameInput) {
+      closePopup();
+    }
+  });
+
+  setupClose.addEventListener('keydown', function (evt) {
+    if (document.activeElement !== userNameInput && evt.keyCode === ENTER_KEYCODE) {
+      closePopup();
+    }
+  });
+
+  submit.addEventListener('click', function () {
+    closePopup();
+  });
+
+  submit.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      closePopup();
+    }
+  });
+
+  setupEyes.addEventListener('click', function () {
+    var color = getRandom(WIZZARD_VARIABLES.eyeColors);
+    setupEyes.style.fill = color;
+    setupEyesInput.value = color;
+  });
+
+  setupFireballColor.addEventListener('click', function () {
+    var color = getRandom(WIZZARD_VARIABLES.fireballColors);
+    setupFireballColor.style.backgroundColor = color;
+    setupFireballColorInput.value = color;
+  });
+
+  // ---- Start ----- //
 
   renderWizards();
-  showPopup();
 
 })();

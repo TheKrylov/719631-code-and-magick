@@ -35,6 +35,15 @@
   var setupEyesInput = setupPlayer.querySelector('input[name="eyes-color"]');
   var setupFireballColor = setupPlayer.querySelector('.setup-fireball-wrap');
   var setupFireballColorInput = setupPlayer.querySelector('input[name="fireball-color"]');
+  var setupShop = document.querySelector('.setup-artifacts-shop');
+  var setupArtifacts = document.querySelector('.setup-artifacts');
+
+  var userDialogPosition = {
+    top: userDialog.style.top,
+    left: userDialog.style.left
+  };
+
+  var draggedItem;
 
 
   // Esc key handler
@@ -54,6 +63,12 @@
   var closePopup = function () {
     userDialog.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
+    resetUserDialogPosition();
+  };
+
+  var resetUserDialogPosition = function () {
+    userDialog.style.top = userDialogPosition.top;
+    userDialog.style.left = userDialogPosition.left;
   };
 
   // Get Random
@@ -97,6 +112,26 @@
       fragment.appendChild(createWizard(wizardsData[i]));
     }
     similarList.appendChild(fragment);
+  };
+
+  var setArtifactsDropable = function (bool) {
+    if (bool) {
+      setupArtifacts.setAttribute('style', 'outline: 2px dashed red');
+    } else {
+      setupArtifacts.removeAttribute('style');
+    }
+  };
+
+  var setArtifactsCellDropable = function (bool, evt) {
+    if (bool) {
+      evt.target.setAttribute('style', 'background-color: yellow');
+    } else {
+      evt.target.removeAttribute('style');
+    }
+  };
+
+  var isArtifactExist = function (evt) {
+    return evt.target.closest('.setup-artifacts-cell').firstChild;
   };
 
   // Events handlers
@@ -144,6 +179,54 @@
     setupFireballColor.style.backgroundColor = color;
     setupFireballColorInput.value = color;
   });
+
+
+  setupShop.addEventListener('dragstart', function (evt) {
+    draggedItem = evt.target.cloneNode(true);
+    setArtifactsDropable(true);
+  });
+
+  setupShop.addEventListener('dragend', function () {
+    setArtifactsDropable(false);
+  });
+
+  setupArtifacts.addEventListener('dragstart', function (evt) {
+    draggedItem = evt.target;
+    setArtifactsDropable(true);
+  });
+
+  setupArtifacts.addEventListener('dragenter', function (evt) {
+    if (!isArtifactExist(evt)) {
+      setArtifactsCellDropable(true, evt);
+    }
+  });
+
+  setupArtifacts.addEventListener('dragover', function (evt) {
+    evt.preventDefault();
+    if (isArtifactExist(evt)) {
+      evt.dataTransfer.dropEffect = 'none';
+    }
+  });
+
+  setupArtifacts.addEventListener('dragleave', function (evt) {
+    setArtifactsCellDropable(false, evt);
+  });
+
+  setupArtifacts.addEventListener('drop', function (evt) {
+    evt.preventDefault();
+
+    setArtifactsDropable(false);
+    setArtifactsCellDropable(false, evt);
+
+    if (!isArtifactExist(evt)) {
+      evt.target.appendChild(draggedItem);
+    }
+  });
+
+  setupArtifacts.addEventListener('dragend', function () {
+    setArtifactsDropable(false);
+  });
+
 
   // ---- Start ----- //
 
